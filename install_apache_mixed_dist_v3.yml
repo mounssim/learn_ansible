@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+# Ubuntu, Debian and CentOS
+
+  - name: install apache, php packages and Update distribution repository (Ubuntu, Debian and CentOS) 
+    package:
+      name: 
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
+      state: latest
+      update_cache: yes
+
+

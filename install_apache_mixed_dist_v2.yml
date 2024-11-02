@@ -1,0 +1,33 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+# Ubuntu and Debian Related
+
+  - name: update repository index for Ubuntu, Debian and install apache2 and php packages on Ubuntu and Debian
+    apt:
+      name: 
+        - apache2
+        - libapache2-mod-php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu" and ansible_distribution == "Debian"
+
+
+#CentOS Related
+
+# apt not exist in CentOS we replaced by "dnf"
+# apache2 == httpd  && libapache2-mod-php == php
+
+
+  - name: update repository index for CentOS and install httpd and php packages on CentOS
+    dnf:
+      name: 
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
