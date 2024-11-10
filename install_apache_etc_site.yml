@@ -21,6 +21,26 @@
       update_cache: yes
     when: ansible_distribution == "Ubuntu" and ansible_distribution == "Debian"
 
+# Workstations group
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: install unzip
+    tags: unzip, terraform
+    package:
+      name: unzip
+
+  - name: install terraform
+    tags: unzip, terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root
+
 #web_servers group
 
 - hosts: web_servers
