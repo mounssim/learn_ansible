@@ -71,6 +71,36 @@
       state: latest
     when: ansible_distribution == "CentOS"
 
+# Start httpd service (CentOS)
+  - name: start httpd (CentOS)
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: started
+#enabled option will make sure httpd service is started even after restating the server
+      enabled: yes
+    when: ansible_distribution == "CentOS"
+
+# Restarting a service
+
+  - name: change email address for admin
+    tags: apache,centos,httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin kamala@gmail.com
+
+    when: ansible_distribution == "CentOS"
+    register: httpd
+
+  - name: restart httpd (CentOS)
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+ 
+
 #all copy files related
 
   - name: copy default html file for site
