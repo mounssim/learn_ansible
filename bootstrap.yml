@@ -1,0 +1,53 @@
+---
+
+- hosts: all
+  become: true
+#"pre_tasks" makes the task first priority this means this task will be executed before all the rest BUT IN THIS CASE THERE WILL NOT BE A DIFFERENCE BECAUSE
+#ANSIBLE EXECUTES FROM TOP TO BUTTOM 
+  pre_tasks: 
+
+
+  - name: install updates (CentOS)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: install updates (Ubuntu and Debian)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu" and ansible_distribution == "Debian"
+
+#Create a user within all the servers / inventory members
+
+- hosts: all
+  become: true
+  tasks: 
+   
+  - name: create mounssim user
+    tags: always
+    user:
+      name: mounssim
+      groups: root
+
+#add the "devope" ssh public key to all the servers ./ssh/authorized_keys file
+  - name: add ssh key for mounssim
+    tags: always
+    authorized_key: 
+      user: mounssim
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILM9RwKDu+l9Dyf7yZf+cd7x/a/4DRD7eurd/PxbF5l0 Learning DevOps"
+
+#copy sudoersfile to "/etc/sudoers.d/"
+  - name: add sudoers file for mounssim
+    tags: always
+    copy:
+      src: sudoer_mounssim
+      dest: /etc/sudoers.d/mounssim
+      owner: root
+      group: root
+      mode: 0440
+
+

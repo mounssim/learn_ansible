@@ -7,19 +7,29 @@
   pre_tasks: 
 
 
-  - name: install updates (CentOS)
+  - name: update repo cache (CentOS)
     tags: always
     dnf:
-      update_only: yes
       update_cache: yes
+#the chages for the "update_cache" won't be count for this part even if it was chaged the output will be cleaner :)
+    changed_when: false
     when: ansible_distribution == "CentOS"
 
-  - name: install updates (Ubuntu and Debian)
+  - name: update repo cache (Ubuntu and Debian)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu" and ansible_distribution == "Debian"
+
+
+#add the "devope" ssh public key to all the servers ./ssh/authorized_keys file
+  - name: add ssh key for mounssim
+    tags: always
+    authorized_key: 
+      user: mounssim
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILM9RwKDu+l9Dyf7yZf+cd7x/a/4DRD7eurd/PxbF5l0 Learning DevOps"
+
 
 # Workstations group
 - hosts: workstations
